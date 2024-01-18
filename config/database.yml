@@ -1,0 +1,20 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  username: <%= ENV.fetch("APP_DATABASE_USERNAME") { 'postgres' } %>
+  host: <%= ENV.fetch("APP_DATABASE_HOST") { 'db' } %>
+  password: <%= ENV["APP_DATABASE_PASSWORD"] %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 10 } %>
+  port: <%= ENV["APP_DATABASE_PORT"] %>
+
+development:
+  <<: *default
+  database: love_calculator_development
+
+test:
+  <<: *default
+  database: love_calculator_test
+
+production:
+  <<: *default
+  database: love_calculator_production

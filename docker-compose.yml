@@ -1,0 +1,39 @@
+version: '3'
+services:
+  # Rails Application
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "3010:3010"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    command: bundle exec puma -p ${PORT:-3010}
+  redis:
+    image: redis:latest
+    command: redis-server
+    volumes:
+      - redis:/data
+    ports:
+      - '6369:6369'
+    logging:
+      driver: none
+
+  # PostgreSQL Database
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ${APP_DATABASE_PASSWORD}
+
+volumes:
+  postgres_data:
+  redis:
